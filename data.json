@@ -11,7 +11,13 @@
    "theme": "food",
    "layout": 0,
    "music": "music/1795620194562-lyrical-barbaad-song-saiyaara-ahaan-panday-aneet-padda-the-rish-jubin-nautiyal.mp3",
-   "frames": {}
+   "frames": {
+    "0": {
+     "id": "ph1795620780284",
+     "url": "photos/ph1795620780284.jpg",
+     "cap": ""
+    }
+   }
   },
   {
    "id": "p2",
