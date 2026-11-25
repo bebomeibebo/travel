@@ -1,7 +1,7 @@
 {
  "cover": {
-  "title": "Our Adventure",
-  "sub": "with the best people",
+  "title": "Bebo's drafts",
+  "sub": "my travel diary",
   "music": ""
  },
  "pages": [
@@ -45,5 +45,6 @@
    "music": "music/1795619100666-jay-sean-ride-it-lyrics-.mp3",
    "frames": {}
   }
- ]
+ ],
+ "themeMusic": {}
 }
