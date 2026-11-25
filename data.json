@@ -8,7 +8,7 @@
   {
    "id": "p1",
    "title": "Day 1",
-   "theme": "snow",
+   "theme": "food",
    "layout": 0,
    "music": "music/1795621292693-larki-bari-anjani-hai-whistle-ringtone-mobilesringtones.com-.mp3",
    "frames": {
@@ -46,5 +46,7 @@
    "frames": {}
   }
  ],
- "themeMusic": {}
+ "themeMusic": {
+  "food": "music/1795622385216-pedhavi-chivarakey.mp3"
+ }
 }
