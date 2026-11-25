@@ -11,7 +11,13 @@
    "theme": "beach",
    "layout": 0,
    "music": "",
-   "frames": {}
+   "frames": {
+    "0": {
+     "id": "ph1795620056751",
+     "url": "photos/ph1795620056751.jpg",
+     "cap": ""
+    }
+   }
   },
   {
    "id": "p2",
