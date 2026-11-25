@@ -14,6 +14,9 @@ body{margin:0;min-height:100vh;background:repeating-linear-gradient(90deg,var(--
 .btn:active{transform:translate(2px,3px);box-shadow:none}
 .btn.pri{background:var(--accent);color:#fff}
 .btn:disabled{opacity:.4}
+.btn.danger{background:#b3402e;color:#fff}
+#vol{width:100px;accent-color:var(--accent);cursor:pointer}
+.volw{display:flex;align-items:center;gap:4px;font-size:18px;color:#fff8ea}
 .ind{font-family:'Caveat',cursive;font-size:24px;color:#fff8ea;text-shadow:1px 1px 0 rgba(0,0,0,.35)}
 .book{position:relative;width:min(94vw,540px);aspect-ratio:3/4;margin:8px 0 24px;background:var(--paper);border-radius:6px 14px 14px 6px;box-shadow:0 14px 30px var(--shadow),inset 14px 0 18px -10px rgba(0,0,0,.28);border-left:10px solid #7a4e3a;overflow:hidden;background-image:radial-gradient(rgba(120,80,40,.07) 1px,transparent 1px);background-size:14px 14px}
 .cover{background:var(--teal);background-image:radial-gradient(rgba(255,255,255,.12) 2px,transparent 2px);background-size:22px 22px;border-left-color:#26666b}
@@ -66,8 +69,9 @@ body{margin:0;min-height:100vh;background:repeating-linear-gradient(90deg,var(--
 <div class="bar" style="padding-top:0">
   <button class="btn pri hide" id="add">+ Add page</button>
   <button class="btn hide" id="music">🎵 Music</button>
-  <button class="btn hide" id="delpage">🗑 Page</button>
+  <button class="btn danger hide" id="delpage">🗑 Delete page</button>
   <button class="btn" id="mute">🔊</button>
+  <span class="volw">🔉<input type="range" id="vol" min="0" max="100" step="1" aria-label="Music volume"></span>
   <button class="btn" id="admin">🔑 Admin</button>
 </div>
 <div class="status" id="status"></div>
@@ -110,6 +114,7 @@ const SLOTS=[[0,0],[82,1],[89,25],[-1,33],[88,48],[0,58],[90,69],[1,81],[42,90],
 
 const DEFAULT={
  cover:{title:'Our Adventure',sub:'with the best people',music:''},
+ themeMusic:{},
  pages:[
   {id:'p1',title:'Day 1',theme:'beach',layout:0,music:'',frames:{}},
   {id:'p2',title:'Sunset vibes',theme:'sunset',layout:1,music:'',frames:{}},
@@ -161,9 +166,17 @@ async function doSave(){
 function mutate(fn){fn(data);queueSave()}
 
 /* ------------------------- Music ------------------------- */
-const bgm=$('bgm');bgm.volume=.35;
+const bgm=$('bgm');
+let vol=parseInt(lsGet('vol'),10);if(isNaN(vol))vol=35;
+bgm.volume=vol/100;$('vol').value=vol;
+$('vol').oninput=()=>{vol=parseInt($('vol').value,10);bgm.volume=vol/100;lsSet('vol',String(vol))};
 let muted=lsGet('muted')==='1';
-function curMusic(){return cur===0?data.cover.music:(data.pages[cur-1]||{}).music}
+function themeKey(pg,idx){return THEMES[pg.theme]?pg.theme:TKEYS[idx%TKEYS.length]}
+function curMusic(){
+ if(cur===0)return data.cover.music;
+ const p=data.pages[cur-1]||{};
+ return p.music||((data.themeMusic||{})[themeKey(p,cur-1)])||'';
+}
 function playMusic(){
  const u=curMusic();
  if(!u){bgm.pause();return}
@@ -216,7 +229,7 @@ function render(){
  book.appendChild(pt);
  if(adm){
   const tb=el('button','btn tbtn','🎨 '+th.name);
-  tb.onclick=()=>{mutate(()=>pg.theme=TKEYS[(TKEYS.indexOf(thKey)+1)%TKEYS.length]);render()};
+  tb.onclick=()=>{mutate(()=>pg.theme=TKEYS[(TKEYS.indexOf(thKey)+1)%TKEYS.length]);render();playMusic()};
   book.appendChild(tb);
  }
  const lay=LAYOUTS[(pg.layout||0)%LAYOUTS.length];
@@ -326,25 +339,39 @@ $('delpage').onclick=()=>{
 $('music').onclick=()=>{
  const m=$('modal');m.textContent='';
  const bg=el('div','modal'),card=el('div','card');
- card.appendChild(el('h2',null,'🎵 Music for '+(cur===0?'the cover':'this page')));
- const have=curMusic();
- card.appendChild(el('p',null,have?'Current: '+have.split('/').pop():'No music yet.'));
- card.appendChild(el('p',null,'Pick an .mp3 (keep it under ~20 MB; short loops are best).'));
- const inp=document.createElement('input');inp.type='file';inp.accept='audio/*';card.appendChild(inp);
- const row=el('div','row'),up=el('button','btn pri','Upload'),rm=el('button','btn','Remove music'),cl=el('button','btn','Close');
- const setM=u=>{if(cur===0)data.cover.music=u;else data.pages[cur-1].music=u;queueSave();playMusic()};
+ data.themeMusic=data.themeMusic||{};
+ const pg=cur===0?null:data.pages[cur-1];
+ const key=pg?themeKey(pg,cur-1):null;
+ const targets=[];
+ if(!pg)targets.push({label:'Cover',get:()=>data.cover.music||'',set:u=>{data.cover.music=u}});
+ else{
+  targets.push({label:'All '+THEMES[key].name+' pages',get:()=>data.themeMusic[key]||'',set:u=>{data.themeMusic[key]=u}});
+  targets.push({label:'Only this page',get:()=>pg.music||'',set:u=>{pg.music=u}});
+ }
+ let sel=0;
+ card.appendChild(el('h2',null,'🎵 Music'));
+ card.appendChild(el('p',null,pg?'Choose where this song should play, then pick an mp3. “Only this page” overrides the category song.':'Song for the cover page.'));
+ const chips=el('div','chips'),info=el('p',null,'');
+ const nm=u=>u?u.split('/').pop().replace(/^\d+-/,''):'none';
+ const refresh=()=>{chips.textContent='';targets.forEach((t,i)=>{const b=el('button','btn'+(i===sel?' on':''),t.label);b.onclick=()=>{sel=i;refresh()};chips.appendChild(b)});info.textContent='Current: '+nm(targets[sel].get())};
+ refresh();
+ const inp=document.createElement('input');inp.type='file';inp.accept='audio/*';
+ card.append(chips,info,inp);
+ const row=el('div','row'),up=el('button','btn pri','Upload'),rm=el('button','btn','Remove'),cl=el('button','btn','Close');
  up.onclick=async()=>{
   const f=inp.files[0];if(!f)return;
   if(f.size>40*1024*1024){alert('Too big. Use a file under 40 MB.');return}
+  const t=targets[sel];
   try{
    m.textContent='';setStatus('Uploading music…');
    const safe=f.name.toLowerCase().replace(/[^a-z0-9.]+/g,'-');
    const path='music/'+Date.now()+'-'+safe;
    await uploadFile(path,f,'Add music');
-   setM(path);
+   t.set(path);queueSave();playMusic();
   }catch(e){setStatus('Upload failed: '+e.message)}
  };
- rm.onclick=()=>{setM('');m.textContent=''};cl.onclick=()=>{m.textContent=''};
+ rm.onclick=()=>{targets[sel].set('');queueSave();playMusic();m.textContent=''};
+ cl.onclick=()=>{m.textContent=''};
  row.append(up,rm,cl);card.appendChild(row);bg.appendChild(card);m.appendChild(bg);
 };
 $('admin').onclick=()=>{
@@ -361,7 +388,7 @@ $('admin').onclick=()=>{
 
 /* ------------------------- Load ------------------------- */
 async function loadPublic(){
- try{const r=await fetch('data.json?v='+Date.now());if(r.ok){const j=await r.json();if(j&&j.pages){data=j;data.cover=data.cover||DEFAULT.cover}}}catch(e){}
+ try{const r=await fetch('data.json?v='+Date.now());if(r.ok){const j=await r.json();if(j&&j.pages){data=j;data.cover=data.cover||DEFAULT.cover;data.themeMusic=data.themeMusic||{}}}}catch(e){}
 }
 async function loadAdminData(){
  if(!token||!CONFIG.owner)return;
@@ -369,7 +396,7 @@ async function loadAdminData(){
   const r=await gh('data.json');
   if(r.status===404){dataSha=null;return}
   if(r.status===401||r.status===403){setStatus('Token not accepted. Check its permissions.');return}
-  const j=await r.json();dataSha=j.sha;data=JSON.parse(b64ToUtf8(j.content));
+  const j=await r.json();dataSha=j.sha;data=JSON.parse(b64ToUtf8(j.content));data.themeMusic=data.themeMusic||{};
  }catch(e){setStatus('Could not load from GitHub: '+e.message)}
 }
 (async()=>{
