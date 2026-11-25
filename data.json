@@ -1,0 +1,8 @@
+{
+ "cover": {"title": "Our Adventure", "sub": "with the best people", "music": ""},
+ "pages": [
+  {"id": "p1", "title": "Day 1", "theme": "beach", "layout": 0, "music": "", "frames": {}},
+  {"id": "p2", "title": "Sunset vibes", "theme": "sunset", "layout": 1, "music": "", "frames": {}},
+  {"id": "p3", "title": "Food & fun", "theme": "food", "layout": 2, "music": "", "frames": {}}
+ ]
+}

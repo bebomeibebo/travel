@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Our Travel Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root{--desk:#c9a27a;--desk2:#b98f66;--paper:#f6ecd9;--paper2:#efe0c3;--ink:#3b2a1e;--accent:#e2725b;--teal:#3f8f94;--card:#fffaf0;--shadow:rgba(60,35,15,.35)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:repeating-linear-gradient(90deg,var(--desk),var(--desk) 38px,var(--desk2) 40px);font-family:'Patrick Hand',system-ui,sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center}
+.bar{width:100%;max-width:560px;display:flex;gap:8px;align-items:center;justify-content:space-between;padding:12px 14px 4px;flex-wrap:wrap}
+.btn{font-family:inherit;font-size:17px;border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer;box-shadow:2px 3px 0 var(--ink)}
+.btn:active{transform:translate(2px,3px);box-shadow:none}
+.btn.pri{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4}
+.ind{font-family:'Caveat',cursive;font-size:24px;color:#fff8ea;text-shadow:1px 1px 0 rgba(0,0,0,.35)}
+.book{position:relative;width:min(94vw,540px);aspect-ratio:3/4;margin:8px 0 24px;background:var(--paper);border-radius:6px 14px 14px 6px;box-shadow:0 14px 30px var(--shadow),inset 14px 0 18px -10px rgba(0,0,0,.28);border-left:10px solid #7a4e3a;overflow:hidden;background-image:radial-gradient(rgba(120,80,40,.07) 1px,transparent 1px);background-size:14px 14px}
+.cover{background:var(--teal);background-image:radial-gradient(rgba(255,255,255,.12) 2px,transparent 2px);background-size:22px 22px;border-left-color:#26666b}
+.stk{position:absolute;line-height:1;user-select:none;pointer-events:none;z-index:5;filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(1px 4px 3px rgba(0,0,0,.3))}
+.label{position:absolute;left:8%;right:8%;top:30%;background:var(--paper);border:3px solid #fff;padding:16px 10px 12px;text-align:center;transform:rotate(-2deg);box-shadow:3px 5px 0 rgba(0,0,0,.25)}
+.label::before,.label::after{content:"";position:absolute;top:-12px;width:70px;height:22px;background:rgba(226,114,91,.75)}
+.label::before{left:-14px;transform:rotate(-20deg)}.label::after{right:-14px;transform:rotate(18deg);background:rgba(240,200,90,.8)}
+.ttl,.sub{width:100%;border:0;background:transparent;text-align:center;color:var(--ink);font-family:'Caveat',cursive;outline:none}
+.ttl{font-size:clamp(38px,11vw,62px);font-weight:700;line-height:1}
+.sub{font-size:clamp(20px,5vw,28px);color:var(--accent)}
+.open{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);z-index:6}
+.frame{position:absolute;background:#fff;padding:2.5% 2.5% 0;box-shadow:2px 5px 10px rgba(0,0,0,.28);display:flex;flex-direction:column}
+.frame.tape{padding:0;background:var(--card)}
+.frame::before{content:"";position:absolute;top:-9px;left:50%;width:34%;height:18px;margin-left:-17%;background:rgba(240,200,90,.75);transform:rotate(-3deg);z-index:2}
+.frame:nth-child(even)::before{background:rgba(226,114,91,.7);transform:rotate(4deg)}
+.slot{flex:1;min-height:0;background:repeating-linear-gradient(45deg,#f1e6cf,#f1e6cf 8px,#ebdcbc 8px,#ebdcbc 16px);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;color:#a58a63;font-size:15px;text-align:center;border:0;width:100%;font-family:inherit}
+.slot img{width:100%;height:100%;object-fit:cover;display:block}
+.plus{font-size:34px;line-height:1;display:block}
+.cap{height:22%;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.capi{width:100%;border:0;background:transparent;font-family:'Caveat',cursive;font-size:clamp(14px,3.8vw,20px);text-align:center;color:var(--ink);outline:none;padding:0}
+.by{font-size:12px;text-align:center;color:#a58a63;line-height:1}
+.x{position:absolute;right:4px;top:4px;z-index:3;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:15px;line-height:1;cursor:pointer}
+.ptitle{position:absolute;left:4%;top:1.5%;font-family:'Caveat',cursive;font-size:clamp(22px,6vw,30px);font-weight:700;width:52%;border:0;background:rgba(255,250,240,.85);border-radius:10px;padding:0 10px;color:#3b2a1e;outline:none;z-index:6;box-shadow:1px 2px 0 rgba(0,0,0,.2)}
+.tbtn{position:absolute;right:4%;top:1.5%;z-index:6;padding:2px 10px;font-size:15px;box-shadow:1px 2px 0 var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chips .btn{font-size:15px;padding:3px 10px;box-shadow:none}
+.chips .on{background:var(--accent);color:#fff}
+.pnum{position:absolute;right:5%;bottom:2%;font-family:'Caveat',cursive;font-size:20px;color:#3b2a1e;background:rgba(255,250,240,.8);border-radius:8px;padding:0 8px;z-index:6}
+.modal{position:fixed;inset:0;background:rgba(30,18,8,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;overflow:auto}
+.card{background:var(--card);color:var(--ink);border:3px solid var(--ink);border-radius:16px;padding:18px;max-width:420px;width:100%;box-shadow:5px 6px 0 var(--ink);max-height:92vh;overflow:auto}
+.card h2{font-family:'Caveat',cursive;font-size:32px;margin:0 0 6px}
+.card p{margin:6px 0;font-size:17px;line-height:1.3}
+.card input[type=text],.card input[type=password]{font:inherit;font-size:18px;width:100%;padding:8px 10px;border:2px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink)}
+.card img.big{width:100%;border-radius:8px;display:block;margin-bottom:6px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:center}
+.lay{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.lay button{aspect-ratio:3/4;background:#fff;border:2px solid var(--ink);border-radius:6px;position:relative;cursor:pointer;padding:0}
+.lay i{position:absolute;background:var(--paper2);border:1px solid #a58a63}
+.status{color:#fff8ea;font-size:15px;min-height:20px;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
+.hide{display:none!important}
+.cm{margin-top:10px;min-height:60px}
+</style>
+</head>
+<body>
+<div class="bar">
+  <button class="btn" id="prev">←</button>
+  <span class="ind" id="ind">Our Journal</span>
+  <button class="btn" id="next">→</button>
+</div>
+<div class="bar" style="padding-top:0">
+  <button class="btn pri hide" id="add">+ Add page</button>
+  <button class="btn hide" id="music">🎵 Music</button>
+  <button class="btn hide" id="delpage">🗑 Page</button>
+  <button class="btn" id="mute">🔊</button>
+  <button class="btn" id="admin">🔑 Admin</button>
+</div>
+<div class="status" id="status"></div>
+<div class="book" id="book"></div>
+<div id="modal"></div>
+<audio id="bgm" loop preload="none"></audio>
+
+<script>
+/* =========================== CONFIG =========================== */
+const CONFIG={
+  // Auto-detected from your GitHub Pages URL (owner.github.io/repo). Override if you use a custom domain:
+  owner: location.hostname.endsWith('.github.io')?location.hostname.split('.')[0]:'',
+  repo:  location.hostname.endsWith('.github.io')?(location.pathname.split('/')[1]||''):'',
+  branch:'main',
+  // Comments use giscus (GitHub Discussions). Fill these 4 from https://giscus.app  (see README)
+  giscus:{repo:'',repoId:'',category:'',categoryId:''}
+};
+if(!CONFIG.giscus.repo&&CONFIG.owner)CONFIG.giscus.repo=CONFIG.owner+'/'+CONFIG.repo;
+/* ============================================================== */
+
+const LAYOUTS=[
+ [[6,7,50,36,-4,0],[50,13,44,32,3,1],[16,50,60,40,-2,0]],
+ [[6,7,42,28,-3,0],[52,8,42,28,3,1],[6,40,42,28,2,1],[52,41,42,28,-3,0],[28,72,44,22,-1,0]],
+ [[8,7,84,40,-2,0],[8,51,84,40,2,1]],
+ [[6,7,56,38,-3,1],[64,10,30,24,4,0],[64,38,30,24,-3,0],[8,50,40,40,3,0],[52,66,42,28,-2,1]]
+];
+const svg=s=>'url("data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" preserveAspectRatio="none">'+s+'</svg>')+'")';
+const gr=(id,a,b)=>'<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient></defs><rect width="300" height="400" fill="url(#'+id+')"/>';
+const WIN=(pts)=>'<g fill="#ffd66b">'+pts.map(p=>'<rect x="'+p[0]+'" y="'+p[1]+'" width="7" height="9"/>').join('')+'</g>';
+const THEMES={
+ beach:{name:'🏖️ Beach',st:['🏖️','🐚','🌴','🦀','🕶️','🍹','⛱️','🌊','🐠','☀️','🏄','⭐'],bg:svg(gr('a','#76d0ee','#eaf8f4')+'<circle cx="245" cy="62" r="44" fill="#fff6b0" opacity=".5"/><circle cx="245" cy="62" r="28" fill="#ffd95e"/><ellipse cx="70" cy="60" rx="40" ry="12" fill="#fff" opacity=".85"/><ellipse cx="95" cy="52" rx="26" ry="12" fill="#fff" opacity=".85"/><path d="M0 165Q38 152 75 165T150 165T225 165T300 165V270H0Z" fill="#2fb3c9"/><path d="M0 190Q38 178 75 190T150 190T225 190T300 190V270H0Z" fill="#5fd0dc" opacity=".8"/><path d="M0 255Q60 232 120 252T240 246T300 250V400H0Z" fill="#f5dca8"/><path d="M0 255Q60 232 120 252T240 246T300 250" fill="none" stroke="#fff" stroke-width="5" opacity=".9"/><g fill="#e6c38a"><circle cx="40" cy="320" r="2"/><circle cx="150" cy="350" r="2"/><circle cx="250" cy="310" r="2"/><circle cx="90" cy="380" r="2"/><circle cx="220" cy="375" r="2"/></g>')},
+ sunset:{name:'🌅 Sunset',st:['🌅','⛵','🌴','🦩','🍹','🪁','🎶','🌺','🐚','🕊️','✨','🧡'],bg:svg(gr('b','#ff8f7a','#ffe3a8')+'<circle cx="150" cy="245" r="70" fill="#fff0a8" opacity=".45"/><circle cx="150" cy="245" r="48" fill="#ffe27a"/><rect y="250" width="300" height="150" fill="#7a4f9a"/><g stroke="#ffd9a0" stroke-width="3" opacity=".7"><path d="M110 268H190"/><path d="M125 284H175"/><path d="M135 300H165"/></g><path d="M0 250Q80 235 150 250T300 245V262H0Z" fill="#5c3a7e"/>')},
+ food:{name:'🍕 Food',st:['🍕','🍜','🍣','🍦','🍩','🥐','🍹','🌮','🍓','🧁','☕','🍉'],bg:svg('<defs><pattern id="c" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#fff5e0"/><rect width="20" height="20" fill="#f4a29a"/><rect x="20" y="20" width="20" height="20" fill="#f4a29a"/></pattern></defs><rect width="300" height="400" fill="url(#c)"/>')},
+ mountain:{name:'🏔️ Hills',st:['🏔️','🌲','⛺','🥾','🦌','🧭','🍂','🔥','🌄','🎒','🦋','🌿'],bg:svg(gr('m','#ffd6b0','#fff1de')+'<path d="M0 230L70 120L130 210L190 100L300 230V400H0Z" fill="#a9c1dc"/><path d="M190 100L168 138L190 126L208 140Z" fill="#fff"/><path d="M70 120L52 152L70 142L86 154Z" fill="#fff"/><path d="M0 290Q80 240 160 280T300 270V400H0Z" fill="#6c9a6f"/><path d="M0 340Q100 300 200 335T300 320V400H0Z" fill="#4f7f58"/><g fill="#2f5d3f"><path d="M30 300l14-40 14 40z"/><path d="M240 290l12-36 12 36z"/><path d="M265 305l10-30 10 30z"/><path d="M60 330l12-34 12 34z"/></g>')},
+ city:{name:'🌆 City',st:['🌆','🚕','🗼','🎡','📸','☕','🛍️','🚇','🎧','🗽','🌃','💫'],bg:svg(gr('c2','#3a2a6e','#e58fa0')+'<circle cx="60" cy="60" r="22" fill="#fff4c4"/><g fill="#1f1840"><rect x="10" y="230" width="50" height="170"/><rect x="65" y="190" width="40" height="210"/><rect x="110" y="250" width="55" height="150"/><rect x="170" y="170" width="45" height="230"/><rect x="220" y="225" width="70" height="175"/></g>'+WIN([[20,245],[40,265],[75,205],[90,235],[75,265],[120,270],[145,300],[180,190],[195,225],[180,260],[230,240],[260,260],[240,300],[20,310],[80,320],[190,330]]))},
+ snow:{name:'❄️ Snow',st:['⛷️','🏂','☃️','❄️','🧣','☕','🎿','🌨️','🧤','🏔️','⭐','🎄'],bg:svg(gr('s','#bfe3f7','#f4fbff')+'<g fill="#fff"><circle cx="30" cy="40" r="3"/><circle cx="90" cy="90" r="2"/><circle cx="150" cy="30" r="3"/><circle cx="220" cy="80" r="3"/><circle cx="270" cy="140" r="2"/><circle cx="50" cy="170" r="2"/><circle cx="180" cy="150" r="3"/></g><path d="M0 300Q100 260 200 295T300 280V400H0Z" fill="#fff"/><path d="M0 350Q120 320 300 345V400H0Z" fill="#e2f1fb"/>')}
+};
+const TKEYS=['beach','sunset','food','mountain','city','snow'];
+const SLOTS=[[0,0],[82,1],[89,25],[-1,33],[88,48],[0,58],[90,69],[1,81],[42,90],[72,87],[18,91]];
+
+const DEFAULT={
+ cover:{title:'Our Adventure',sub:'with the best people',music:''},
+ pages:[
+  {id:'p1',title:'Day 1',theme:'beach',layout:0,music:'',frames:{}},
+  {id:'p2',title:'Sunset vibes',theme:'sunset',layout:1,music:'',frames:{}},
+  {id:'p3',title:'Food & fun',theme:'food',layout:2,music:'',frames:{}}
+ ]
+};
+let data=JSON.parse(JSON.stringify(DEFAULT)),dataSha=null,cur=0;
+let token=lsGet('gh_token')||'';
+const preview={};            // local blob URLs for files committed seconds ago (site not rebuilt yet)
+const $=id=>document.getElementById(id);
+const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e};
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
+const isAdmin=()=>!!token;
+const src=u=>preview[u]||u;
+const setStatus=t=>{$('status').textContent=t};
+
+/* ------------------------- GitHub API ------------------------- */
+const apiUrl=p=>'https://api.github.com/repos/'+CONFIG.owner+'/'+CONFIG.repo+'/contents/'+p;
+function gh(path,opts={}){
+ return fetch(apiUrl(path)+(opts.method?'':'?ref='+CONFIG.branch),Object.assign({},opts,{headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'}}));
+}
+const toB64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(blob)});
+const b64ToUtf8=b=>decodeURIComponent(escape(atob(b.replace(/\n/g,''))));
+const utf8ToB64=s=>btoa(unescape(encodeURIComponent(s)));
+async function getSha(path){const r=await gh(path);if(r.status===404)return null;if(!r.ok)throw new Error('GitHub '+r.status);return (await r.json()).sha}
+async function uploadFile(path,blob,msg){
+ const body={message:msg,content:await toB64(blob),branch:CONFIG.branch};
+ const r=await gh(path,{method:'PUT',body:JSON.stringify(body)});
+ if(!r.ok){const j=await r.json().catch(()=>({}));throw new Error(j.message||('GitHub '+r.status))}
+ preview[path]=URL.createObjectURL(blob);
+}
+let saveTimer=null,chain=Promise.resolve();
+function queueSave(){setStatus('Saving…');clearTimeout(saveTimer);saveTimer=setTimeout(()=>{chain=chain.then(doSave)},700)}
+async function doSave(){
+ try{
+  for(let attempt=0;attempt<2;attempt++){
+   const body={message:'Update journal',content:utf8ToB64(JSON.stringify(data,null,1)),branch:CONFIG.branch};
+   if(dataSha)body.sha=dataSha;
+   const r=await gh('data.json',{method:'PUT',body:JSON.stringify(body)});
+   if(r.ok){dataSha=(await r.json()).content.sha;setStatus('Saved ✓ (live for everyone in ~1 minute)');return}
+   if(r.status===409||r.status===422){dataSha=await getSha('data.json');continue}
+   const j=await r.json().catch(()=>({}));throw new Error(j.message||r.status)
+  }
+  throw new Error('conflict')
+ }catch(e){setStatus('Save failed: '+e.message)}
+}
+function mutate(fn){fn(data);queueSave()}
+
+/* ------------------------- Music ------------------------- */
+const bgm=$('bgm');bgm.volume=.35;
+let muted=lsGet('muted')==='1';
+function curMusic(){return cur===0?data.cover.music:(data.pages[cur-1]||{}).music}
+function playMusic(){
+ const u=curMusic();
+ if(!u){bgm.pause();return}
+ const s=src(u);
+ if(bgm.getAttribute('src')!==s){bgm.src=s}
+ if(!muted)bgm.play().catch(()=>{});else bgm.pause();
+}
+$('mute').onclick=()=>{muted=!muted;lsSet('muted',muted?'1':'0');$('mute').textContent=muted?'🔇':'🔊';playMusic()};
+$('mute').textContent=muted?'🔇':'🔊';
+
+/* ------------------------- Render ------------------------- */
+function stickers(host,th,seed){
+ SLOTS.forEach((p,i)=>{
+  const s=el('div','stk',th.st[(i+seed)%th.st.length]);
+  s.style.left=p[0]+'%';s.style.top=p[1]+'%';
+  s.style.fontSize=(34+((i*7+seed)%4)*8)+'px';
+  s.style.transform='rotate('+(((i*37+seed*11)%50)-25)+'deg)';
+  host.appendChild(s);
+ });
+}
+function render(){
+ const book=$('book'),total=data.pages.length,adm=isAdmin();
+ book.textContent='';
+ $('prev').disabled=cur<=0;$('next').disabled=cur>=total;
+ ['add','music','delpage'].forEach(i=>$(i).classList.toggle('hide',!adm));
+ $('delpage').classList.toggle('hide',!adm||cur===0);
+ $('admin').textContent=adm?'🔓 Admin on':'🔑 Admin';
+ if(cur===0){
+  $('ind').textContent='Cover';
+  book.className='book cover';book.style.background='';
+  [['✈️',8,6,64,-12],['🌴',74,5,70,10],['📷',6,70,66,-8],['🧳',74,68,62,9],['🐚',44,84,46,-5],['🗺️',64,40,40,14],['⭐',10,40,34,-10]].forEach(([e,x,y,s,r])=>{
+   const d=el('div','stk',e);d.style.left=x+'%';d.style.top=y+'%';d.style.fontSize=s+'px';d.style.transform='rotate('+r+'deg)';book.appendChild(d)});
+  const lab=el('div','label');
+  const t=el('input','ttl');t.value=data.cover.title;t.maxLength=30;t.readOnly=!adm;
+  const s=el('input','sub');s.value=data.cover.sub;s.maxLength=40;s.readOnly=!adm;
+  t.onchange=()=>mutate(d=>d.cover.title=t.value);
+  s.onchange=()=>mutate(d=>d.cover.sub=s.value);
+  lab.append(t,s);book.appendChild(lab);
+  const o=el('button','btn pri open','Open journal →');o.onclick=()=>go(1);book.appendChild(o);
+  return;
+ }
+ book.className='book';
+ const pg=data.pages[cur-1];
+ const thKey=THEMES[pg.theme]?pg.theme:TKEYS[(cur-1)%TKEYS.length];
+ const th=THEMES[thKey];
+ book.style.background=th.bg;book.style.backgroundSize='100% 100%';
+ $('ind').textContent='Page '+cur+' of '+total;
+ const pt=el('input','ptitle');pt.value=pg.title||'';pt.placeholder=adm?'Page title…':'';pt.maxLength=26;pt.readOnly=!adm;
+ pt.onchange=()=>mutate(()=>pg.title=pt.value);
+ book.appendChild(pt);
+ if(adm){
+  const tb=el('button','btn tbtn','🎨 '+th.name);
+  tb.onclick=()=>{mutate(()=>pg.theme=TKEYS[(TKEYS.indexOf(thKey)+1)%TKEYS.length]);render()};
+  book.appendChild(tb);
+ }
+ const lay=LAYOUTS[(pg.layout||0)%LAYOUTS.length];
+ pg.frames=pg.frames||{};
+ lay.forEach((L,i)=>{
+  const f=pg.frames[i];
+  const fr=el('div','frame'+(L[5]?' tape':''));
+  fr.style.cssText+='left:'+L[0]+'%;top:'+(L[1]+5)+'%;width:'+L[2]+'%;height:'+(L[3]*0.9)+'%;transform:rotate('+L[4]+'deg)';
+  const slot=el('button','slot');
+  if(f&&f.url){
+   const im=el('img');im.src=src(f.url);im.alt=f.cap||'Trip photo';im.loading='lazy';slot.appendChild(im);
+   slot.onclick=()=>openPhoto(pg,i);
+   if(adm){const x=el('button','x','×');x.title='Remove photo';x.onclick=e=>{e.stopPropagation();if(confirm('Remove this photo?')){mutate(()=>delete pg.frames[i]);render()}};fr.appendChild(x)}
+  }else if(adm){
+   slot.append(el('span','plus','+'),document.createTextNode('add photo'));
+   slot.onclick=()=>pick(pg,i);
+  }else{slot.style.cursor='default';slot.textContent='—'}
+  fr.appendChild(slot);
+  const cp=el('div','cap');
+  if(f&&f.url){
+   if(adm){
+    const ci=el('input','capi');ci.value=f.cap||'';ci.placeholder='caption…';ci.maxLength=40;
+    ci.onchange=()=>mutate(()=>f.cap=ci.value);cp.appendChild(ci);
+   }else cp.appendChild(el('div','capi',f.cap||''));
+   cp.appendChild(el('div','by','💬 tap for comments'));
+  }
+  fr.appendChild(cp);
+  book.appendChild(fr);
+ });
+ stickers(book,th,cur);
+ book.appendChild(el('div','pnum',String(cur)));
+}
+function go(n){cur=Math.max(0,Math.min(data.pages.length,n));render();playMusic();window.scrollTo(0,0)}
+$('prev').onclick=()=>go(cur-1);
+$('next').onclick=()=>go(cur+1);
+
+/* ------------------------- Photos + comments ------------------------- */
+function shrink(file){
+ return createImageBitmap(file).then(b=>{
+  const s=Math.min(1,1400/Math.max(b.width,b.height));
+  const c=document.createElement('canvas');c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);
+  c.getContext('2d').drawImage(b,0,0,c.width,c.height);
+  return new Promise(r=>c.toBlob(r,'image/jpeg',.82));
+ });
+}
+function pick(pg,i){
+ const inp=document.createElement('input');inp.type='file';inp.accept='image/*';
+ inp.onchange=async()=>{
+  const file=inp.files[0];if(!file)return;
+  try{
+   setStatus('Uploading photo…');
+   const blob=await shrink(file);
+   const id='ph'+Date.now();
+   const path='photos/'+id+'.jpg';
+   await uploadFile(path,blob,'Add photo');
+   mutate(()=>{pg.frames[i]={id:id,url:path,cap:''}});
+   render();
+  }catch(e){setStatus('Upload failed: '+e.message)}
+ };
+ inp.click();
+}
+function openPhoto(pg,i){
+ const f=pg.frames[i];const m=$('modal');m.textContent='';
+ const bg=el('div','modal'),card=el('div','card');
+ const im=el('img','big');im.src=src(f.url);card.appendChild(im);
+ if(f.cap)card.appendChild(el('p',null,f.cap));
+ const box=el('div','cm');card.appendChild(box);
+ const g=CONFIG.giscus;
+ if(g.repoId&&g.categoryId){
+  const s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo',g.repo);s.setAttribute('data-repo-id',g.repoId);
+  s.setAttribute('data-category',g.category);s.setAttribute('data-category-id',g.categoryId);
+  s.setAttribute('data-mapping','specific');s.setAttribute('data-term',f.id||(pg.id+'_'+i));
+  s.setAttribute('data-strict','0');s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-emit-metadata','0');s.setAttribute('data-input-position','top');
+  s.setAttribute('data-theme','light');s.setAttribute('data-lang','en');
+  s.crossOrigin='anonymous';s.async=true;box.appendChild(s);
+ }else box.appendChild(el('p',null,'Comments aren’t set up yet (see README, step 5).'));
+ const row=el('div','row'),c=el('button','btn','Close');c.onclick=()=>{m.textContent=''};row.appendChild(c);
+ card.appendChild(row);bg.appendChild(card);bg.onclick=e=>{if(e.target===bg)m.textContent=''};m.appendChild(bg);
+}
+
+/* ------------------------- Admin UI ------------------------- */
+$('add').onclick=()=>{
+ const m=$('modal');m.textContent='';
+ const bg=el('div','modal'),card=el('div','card');
+ let sel='beach';
+ card.appendChild(el('h2',null,'Pick a vibe + layout'));
+ const chips=el('div','chips');
+ TKEYS.forEach(k=>{const c=el('button','btn'+(k===sel?' on':''),THEMES[k].name);c.onclick=()=>{sel=k;chips.querySelectorAll('.btn').forEach(x=>x.classList.remove('on'));c.classList.add('on')};chips.appendChild(c)});
+ card.appendChild(chips);
+ const g=el('div','lay');
+ LAYOUTS.forEach((L,k)=>{
+  const b=el('button');b.setAttribute('aria-label','Layout '+(k+1));
+  L.forEach(r=>{const i=el('i');i.style.cssText='left:'+r[0]+'%;top:'+r[1]+'%;width:'+r[2]+'%;height:'+r[3]*0.9+'%';b.appendChild(i)});
+  b.onclick=()=>{m.textContent='';mutate(d=>d.pages.push({id:'p'+Date.now(),title:'',theme:sel,layout:k,music:'',frames:{}}));go(data.pages.length)};
+  g.appendChild(b);
+ });
+ const row=el('div','row'),c=el('button','btn','Cancel');c.onclick=()=>{m.textContent=''};row.appendChild(c);
+ card.append(g,row);bg.appendChild(card);m.appendChild(bg);
+};
+$('delpage').onclick=()=>{
+ if(cur===0||!confirm('Delete this whole page?'))return;
+ mutate(d=>d.pages.splice(cur-1,1));cur=Math.min(cur,data.pages.length);render();playMusic();
+};
+$('music').onclick=()=>{
+ const m=$('modal');m.textContent='';
+ const bg=el('div','modal'),card=el('div','card');
+ card.appendChild(el('h2',null,'🎵 Music for '+(cur===0?'the cover':'this page')));
+ const have=curMusic();
+ card.appendChild(el('p',null,have?'Current: '+have.split('/').pop():'No music yet.'));
+ card.appendChild(el('p',null,'Pick an .mp3 (keep it under ~20 MB; short loops are best).'));
+ const inp=document.createElement('input');inp.type='file';inp.accept='audio/*';card.appendChild(inp);
+ const row=el('div','row'),up=el('button','btn pri','Upload'),rm=el('button','btn','Remove music'),cl=el('button','btn','Close');
+ const setM=u=>{if(cur===0)data.cover.music=u;else data.pages[cur-1].music=u;queueSave();playMusic()};
+ up.onclick=async()=>{
+  const f=inp.files[0];if(!f)return;
+  if(f.size>40*1024*1024){alert('Too big. Use a file under 40 MB.');return}
+  try{
+   m.textContent='';setStatus('Uploading music…');
+   const safe=f.name.toLowerCase().replace(/[^a-z0-9.]+/g,'-');
+   const path='music/'+Date.now()+'-'+safe;
+   await uploadFile(path,f,'Add music');
+   setM(path);
+  }catch(e){setStatus('Upload failed: '+e.message)}
+ };
+ rm.onclick=()=>{setM('');m.textContent=''};cl.onclick=()=>{m.textContent=''};
+ row.append(up,rm,cl);card.appendChild(row);bg.appendChild(card);m.appendChild(bg);
+};
+$('admin').onclick=()=>{
+ const m=$('modal');m.textContent='';
+ const bg=el('div','modal'),card=el('div','card');
+ card.appendChild(el('h2',null,'Owner login'));
+ card.appendChild(el('p',null,'Paste your GitHub fine-grained token (Contents: read & write on this repo only). It stays in this browser only. Friends don’t need this; they just view and comment.'));
+ const inp=document.createElement('input');inp.type='password';inp.placeholder='github_pat_…';inp.value=token;card.appendChild(inp);
+ const row=el('div','row'),s=el('button','btn pri','Save'),o=el('button','btn','Log out'),c=el('button','btn','Close');
+ s.onclick=async()=>{token=inp.value.trim();lsSet('gh_token',token);m.textContent='';await loadAdminData();render()};
+ o.onclick=()=>{token='';lsDel('gh_token');m.textContent='';render()};c.onclick=()=>{m.textContent=''};
+ row.append(s,o,c);card.appendChild(row);bg.appendChild(card);m.appendChild(bg);
+};
+
+/* ------------------------- Load ------------------------- */
+async function loadPublic(){
+ try{const r=await fetch('data.json?v='+Date.now());if(r.ok){const j=await r.json();if(j&&j.pages){data=j;data.cover=data.cover||DEFAULT.cover}}}catch(e){}
+}
+async function loadAdminData(){
+ if(!token||!CONFIG.owner)return;
+ try{
+  const r=await gh('data.json');
+  if(r.status===404){dataSha=null;return}
+  if(r.status===401||r.status===403){setStatus('Token not accepted. Check its permissions.');return}
+  const j=await r.json();dataSha=j.sha;data=JSON.parse(b64ToUtf8(j.content));
+ }catch(e){setStatus('Could not load from GitHub: '+e.message)}
+}
+(async()=>{
+ await loadPublic();
+ if(token)await loadAdminData();
+ render();
+})();
+</script>
+</body>
+</html>
